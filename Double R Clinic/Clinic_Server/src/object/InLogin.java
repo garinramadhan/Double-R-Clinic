@@ -29,4 +29,5 @@ public interface InLogin extends Remote {
     public ArrayList getRecord() throws RemoteException;;
     public int doLogin() throws RemoteException;;
     public String[] FDUser() throws RemoteException;;
+    public String[] cekAccess() throws RemoteException;;
 }

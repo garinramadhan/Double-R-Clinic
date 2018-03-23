@@ -93,7 +93,7 @@ public class MLogin extends UnicastRemoteObject implements InLogin {
         try
         {
             obj_koneksi.openConnection();
-            String str = "UPDATE AccessLogin SET Password =  ?," +
+            String str = "UPDATE AccessLogin SET UPassword =  ?," +
                     "where Id_User = ?";
             PreparedStatement pr = obj_koneksi.con.prepareStatement(str);
             pr.setString(1, Password);
@@ -184,7 +184,7 @@ public class MLogin extends UnicastRemoteObject implements InLogin {
         try 
         {
             obj_koneksi.openConnection();
-            String sq = "select Id_User from AccessLogin where Username=? AND Password=?";
+            String sq = "select Id_User from AccessLogin where Username=? AND UPassword=?";
             PreparedStatement ps = obj_koneksi.con.prepareStatement(sq);
             ps.setString(1, Username);
             ps.setString(2, Password);
@@ -212,7 +212,7 @@ public class MLogin extends UnicastRemoteObject implements InLogin {
         try 
         {
             obj_koneksi.openConnection();
-            String sq = "select count(*) as jumlah from Users where Username=? and Password=?";
+            String sq = "select count(*) as jumlah from AccessLogin where Username=? and UPassword=?";
             //pake prepare statment karena ada parameter
             PreparedStatement ps = obj_koneksi.con.prepareStatement(sq);
             ps.setString(1, getUsername());
@@ -232,4 +232,33 @@ public class MLogin extends UnicastRemoteObject implements InLogin {
         return 0;
     }
     
+    public String[] cekAccess()
+    {
+        try 
+        {
+            obj_koneksi.openConnection();
+            String sq = "select Id_User, Username, isAdmin from AccessLogin where Username=? AND UPassword=?";
+            PreparedStatement ps = obj_koneksi.con.prepareStatement(sq);
+            ps.setString(1, Username);
+            ps.setString(2, Password);
+            
+            ResultSet r = ps.executeQuery();
+            String[] data = new String[3];
+            if(r.next())
+            {
+                data[0]= r.getString("Id_User");
+                data[1]= r.getString("Username");
+                data[2]= r.getString("isAdmin");
+            }
+            else
+            {
+               data[0]= "Null";
+            }
+            return data;          
+        } 
+        catch (Exception e) 
+        {
+        }
+        return null;
+    }
 }
