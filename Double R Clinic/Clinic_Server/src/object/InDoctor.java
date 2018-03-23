@@ -5,6 +5,7 @@
 package object;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 /**
  *
@@ -26,8 +27,8 @@ public interface InDoctor extends Remote{
     public int doInsert() throws RemoteException;;
     public int doUpdate() throws RemoteException;;
     public int doDelete() throws RemoteException;;
-    public ArrayList display() throws RemoteException;;
     public ArrayList getRecord() throws RemoteException;;
     public String[] FDDoctor() throws RemoteException;;
     public String autoid() throws RemoteException;;
+    public ResultSet tableDoctor() throws RemoteException;;
 }
