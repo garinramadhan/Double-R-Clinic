@@ -242,7 +242,34 @@ public class MDoctor extends UnicastRemoteObject implements InDoctor{
         return null;
     }
     
-    
-    
+    public String autoid(){
+        String idDoctor = "";
+        try {
+            obj_koneksi.openConnection();
+            String sql1 = "Select Right(Id_Doctor,5) as 'Id_Doctor' from Doctor.Doctor Order by Id_Doctor DESC";
+            Statement stat = obj_koneksi.con.createStatement();
+            ResultSet rs = stat.executeQuery(sql1);
+            rs.next();
+            int autocode = rs.getInt("Id_Doctor");
+            if(autocode < 9){
+                idDoctor = "D0000" + Integer.toString(autocode + 1);
+            }else if(autocode < 99){
+                idDoctor = "D000" + Integer.toString(autocode + 1);
+            }else if(autocode < 999){
+                idDoctor = "D00" + Integer.toString(autocode + 1);
+            }else if(autocode < 9999){
+                idDoctor = "D00" + Integer.toString(autocode + 1);
+            }else if(autocode < 99999){
+                idDoctor = "D0" + Integer.toString(autocode + 1);
+            }else if(autocode < 99999){
+                idDoctor = "D" + Integer.toString(autocode + 1);
+            }else{
+                idDoctor = "full";
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+        }
+        return idDoctor;
+    }
     
 }

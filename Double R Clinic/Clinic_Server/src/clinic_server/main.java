@@ -9,6 +9,7 @@ import config.koneksi;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import model.MDoctor;
 import model.MLogin;
 
 /**
@@ -28,6 +29,8 @@ public class main {
             Registry registry = LocateRegistry.createRegistry(1097);          
             MLogin objlogin = new MLogin();
             registry.rebind("objlogin", objlogin);
+            MDoctor objdoctor = new MDoctor();
+            registry.rebind("objdoctor", objdoctor);
             System.out.println("Object is registered.");
             System.out.println("Now server is waiting for client request...");
         }

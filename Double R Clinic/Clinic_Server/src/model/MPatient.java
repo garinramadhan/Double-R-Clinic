@@ -4,8 +4,8 @@
  */
 package model;
 import config.koneksi;
-import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -227,8 +227,4 @@ public class MPatient extends UnicastRemoteObject implements InPatient{
         }
         return null;
     }
-    
-    
-    
-    
 }

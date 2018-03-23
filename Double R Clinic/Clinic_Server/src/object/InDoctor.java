@@ -29,4 +29,5 @@ public interface InDoctor extends Remote{
     public ArrayList display() throws RemoteException;;
     public ArrayList getRecord() throws RemoteException;;
     public String[] FDDoctor() throws RemoteException;;
+    public String autoid() throws RemoteException;;
 }
