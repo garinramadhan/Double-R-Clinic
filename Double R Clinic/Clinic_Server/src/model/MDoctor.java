@@ -88,14 +88,13 @@ public class MDoctor extends UnicastRemoteObject implements InDoctor{
         try
         {
             obj_koneksi.openConnection();
-            String str = "insert into Doctor.Doctor(Id_Doctor, Id_Specialist, DoctorName, DoctorGender, DateOfBirth, Phone) values(?,?,?,?,?,?)";
+            String str = "exec pcdDoctor ?,?,?,?,?";
             PreparedStatement pr = obj_koneksi.con.prepareStatement(str);
-            pr.setString(1, DoctorID);
-            pr.setString(2, DoctorSPC);
-            pr.setString(3, DoctorName);
-            pr.setString(4, DoctorGender);
-            pr.setString(5, DoctorDOB);
-            pr.setString(6, DoctorPhone);
+            pr.setString(1, DoctorSPC);
+            pr.setString(2, DoctorName);
+            pr.setString(3, DoctorGender);
+            pr.setString(4, DoctorDOB);
+            pr.setString(5, DoctorPhone);
             i = pr.executeUpdate();
         }
         catch(SQLException ex)
@@ -111,12 +110,12 @@ public class MDoctor extends UnicastRemoteObject implements InDoctor{
         try
         {
             obj_koneksi.openConnection();
-            String str = "UPDATE Doctor.Doctor SET Id_Specialist =  ?," +
-                    "DoctorName = ? "+
-                    "DoctorGender = ? "+
-                    "DateOfBirth = ? "+
-                    "Phone = ? "+
-                    "where Id_Doctor = ?";
+            String str = "exec pcduptDoctor @idspecialist =  ?," +
+                    "@doctorname = ? "+
+                    "@gender = ? "+
+                    "@dob = ? "+
+                    "@phone = ? "+
+                    "where @iddoctor = ?";
             PreparedStatement pr = obj_koneksi.con.prepareStatement(str);
             pr.setString(1, DoctorSPC);
             pr.setString(2, DoctorName);

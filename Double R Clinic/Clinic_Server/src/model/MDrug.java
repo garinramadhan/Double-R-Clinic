@@ -90,9 +90,8 @@ public class MDrug extends UnicastRemoteObject implements InDrug {
         try
         {
             obj_koneksi.openConnection();
-            String str = "insert into Recipe.Drug(Id_Drug, DrugName, DrugType, Stock, ExpDate, Price) values(?,?,?,?,?,?)";
+            String str = "exec pcdDrug ?,?,?,?,?";
             PreparedStatement pr = obj_koneksi.con.prepareStatement(str);
-            pr.setString(1, DrugID);
             pr.setString(2, DrugName);
             pr.setString(3, DrugType);
 //            pr.setString(4, DrugStock);
