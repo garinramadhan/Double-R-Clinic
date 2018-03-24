@@ -151,36 +151,16 @@ public class MDrug extends UnicastRemoteObject implements InDrug {
         return i;
     }
     
-    public ArrayList display()
-    {
-         ArrayList data = new ArrayList();
-         try
-         {
-             obj_koneksi.openConnection();
-             Statement stmt = obj_koneksi.con.createStatement();
-             String str = "select Id_Drug, DrugName, DrugType, Stock, ExpDate, Price from Recipe.Drug";
-             ResultSet rs = stmt.executeQuery(str);
-             while(rs.next())
-             {
-                 this.setDrugID(rs.getString(1));
-                 this.setDrugName(rs.getString(2));
-                 this.setDrugType(rs.getString(3));
-//                 this.setDrugStock(rs.getString(4));
-                 this.setDrugEXP(rs.getString(5));
-//                 this.setDrugPrice(rs.getString(6));
-                 data.add(this.getDrugID());
-                 data.add(this.getDrugName());
-                 data.add(this.getDrugType());
-                 data.add(this.getDrugStock());
-                 data.add(this.getDrugEXP());
-                 data.add(this.getDrugPrice());
-             }
-         }
-         catch(SQLException ex)
-         {
-             System.out.println(ex.getMessage());
-         }
-         return data;
+    public ResultSet tableDrug(){
+        ResultSet rs = null;
+        String sql = "select * from Recipe.Drug";
+        try {
+            Statement statement = obj_koneksi.con.createStatement();
+            rs = statement.executeQuery(sql);
+        } catch (SQLException ex) {
+            System.out.println("Error: " + ex);
+        }
+        return rs;
     }
     
     public ArrayList getRecord()
@@ -242,5 +222,35 @@ public class MDrug extends UnicastRemoteObject implements InDrug {
         {
         }
         return null;
+    }
+    
+    public String autoid(){
+        String idDrug = "";
+        try {
+            obj_koneksi.openConnection();
+            String sql1 = "Select Right(Id_Drug,5) as 'Id_Drug' from Recipe.Drug Order by Id_Drug DESC";
+            Statement stat = obj_koneksi.con.createStatement();
+            ResultSet rs = stat.executeQuery(sql1);
+            rs.next();
+            int autocode = rs.getInt("Id_Drug");
+            if(autocode < 9){
+                idDrug = "DRG0000" + Integer.toString(autocode + 1);
+            }else if(autocode < 99){
+                idDrug = "DRG000" + Integer.toString(autocode + 1);
+            }else if(autocode < 999){
+                idDrug = "DRG00" + Integer.toString(autocode + 1);
+            }else if(autocode < 9999){
+                idDrug = "DRG00" + Integer.toString(autocode + 1);
+            }else if(autocode < 99999){
+                idDrug = "DRG0" + Integer.toString(autocode + 1);
+            }else if(autocode < 99999){
+                idDrug = "DRG" + Integer.toString(autocode + 1);
+            }else{
+                idDrug = "full";
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+        }
+        return idDrug;
     }
 }
