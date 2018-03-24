@@ -139,16 +139,34 @@ public class MPatient extends UnicastRemoteObject implements InPatient{
         return i;
     }
     
-    public ResultSet tablePatient(){
-        ResultSet rs = null;
-        String sql = "select * from Patient.Patient";
-        try {
-            Statement statement = obj_koneksi.con.createStatement();
-            rs = statement.executeQuery(sql);
-        } catch (SQLException ex) {
-            System.out.println("Error: " + ex);
-        }
-        return rs;
+    public ArrayList display()
+    {
+         ArrayList data = new ArrayList();
+         try
+         {
+             obj_koneksi.openConnection();
+             Statement stmt = obj_koneksi.con.createStatement();
+             String str = "select Id_Patient, Patient_Name, DateOfBirth, Address, PatientGender from Patient.Patient";
+             ResultSet rs = stmt.executeQuery(str);
+             while(rs.next())
+             {
+                 this.setPatientID(rs.getString(1));
+                 this.setPatientName(rs.getString(2));
+                 this.setPatientDOB(rs.getString(3));
+                 this.setPatientAddress(rs.getString(4));
+                 this.setPatientGender(rs.getString(5));
+                 data.add(this.getPatientID());
+                 data.add(this.getPatientName());
+                 data.add(this.getPatientDOB());
+                 data.add(this.getPatientAddress());
+                 data.add(this.getPatientGender());
+             }
+         }
+         catch(SQLException ex)
+         {
+             System.out.println(ex.getMessage());
+         }
+         return data;
     }
     
     public ArrayList getRecord()
@@ -209,35 +227,4 @@ public class MPatient extends UnicastRemoteObject implements InPatient{
         }
         return null;
     }
-    
-    public String autoid(){
-        String idPatient = "";
-        try {
-            obj_koneksi.openConnection();
-            String sql1 = "Select Right(Id_Patient,5) as 'Id_Patient' from Patient.Patient Order by Id_Patient DESC";
-            Statement stat = obj_koneksi.con.createStatement();
-            ResultSet rs = stat.executeQuery(sql1);
-            rs.next();
-            int autocode = rs.getInt("Id_Patient");
-            if(autocode < 9){
-                idPatient = "P0000" + Integer.toString(autocode + 1);
-            }else if(autocode < 99){
-                idPatient = "P000" + Integer.toString(autocode + 1);
-            }else if(autocode < 999){
-                idPatient = "P00" + Integer.toString(autocode + 1);
-            }else if(autocode < 9999){
-                idPatient = "P00" + Integer.toString(autocode + 1);
-            }else if(autocode < 99999){
-                idPatient = "P0" + Integer.toString(autocode + 1);
-            }else if(autocode < 99999){
-                idPatient = "P" + Integer.toString(autocode + 1);
-            }else{
-                idPatient = "full";
-            }
-        } catch (Exception e) {
-            System.out.println("Error: " + e);
-        }
-        return idPatient;
-    }
-    
 }

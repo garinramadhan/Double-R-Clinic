@@ -5,7 +5,6 @@
 package object;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 /**
  *
@@ -25,7 +24,7 @@ public interface InPatient extends Remote{
     public int doInsert() throws RemoteException;;
     public int doUpdate() throws RemoteException;;
     public int doDelete() throws RemoteException;;
-    public ResultSet tablePatient() throws RemoteException;;
+    public ArrayList display() throws RemoteException;;
     public ArrayList getRecord() throws RemoteException;;
     public String[] FDPatient() throws RemoteException;;
 }
