@@ -149,7 +149,6 @@ public class MDoctor extends UnicastRemoteObject implements InDoctor{
         return i;
     }
     
-    
     public ArrayList getRecord()
     {
         ArrayList data = new ArrayList();
