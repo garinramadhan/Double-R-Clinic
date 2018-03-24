@@ -116,30 +116,16 @@ public class MSpecialist extends UnicastRemoteObject implements InSpecialist{
         return i;
     }
     
-    public ArrayList display()
-    {
-         ArrayList data = new ArrayList();
-         try
-         {
-             obj_koneksi.openConnection();
-             Statement stmt = obj_koneksi.con.createStatement();
-             String str = "select Id_Specialist, Specialist, Fare from Doctor.Specialist";
-             ResultSet rs = stmt.executeQuery(str);
-             while(rs.next())
-             {
-                 this.setSpcID(rs.getString(1));
-                 this.setSpcName(rs.getString(2));
-//                 this.setSpcFare(rs.getString(3));
-                 data.add(this.getSpcID());
-                 data.add(this.getSpcName());
-//                 data.add(this.getSpcFare());
-             }
-         }
-         catch(SQLException ex)
-         {
-             System.out.println(ex.getMessage());
-         }
-         return data;
+    public ResultSet tableSpecialist(){
+        ResultSet rs = null;
+        String sql = "select * from Doctor.Specialist";
+        try {
+            Statement statement = obj_koneksi.con.createStatement();
+            rs = statement.executeQuery(sql);
+        } catch (SQLException ex) {
+            System.out.println("Error: " + ex);
+        }
+        return rs;
     }
     
     public ArrayList getRecord()
@@ -196,7 +182,33 @@ public class MSpecialist extends UnicastRemoteObject implements InSpecialist{
         return null;
     }
     
-    
-    
-    
+    public String autoid(){
+        String idSpecialist = "";
+        try {
+            obj_koneksi.openConnection();
+            String sql1 = "Select Right(Id_Specialist,5) as 'Id_Specialist' from Doctor.Specialist Order by Id_Specialist DESC";
+            Statement stat = obj_koneksi.con.createStatement();
+            ResultSet rs = stat.executeQuery(sql1);
+            rs.next();
+            int autocode = rs.getInt("Id_Specialist");
+            if(autocode < 9){
+                idSpecialist = "SPC0000" + Integer.toString(autocode + 1);
+            }else if(autocode < 99){
+                idSpecialist = "SPC000" + Integer.toString(autocode + 1);
+            }else if(autocode < 999){
+                idSpecialist = "SPC00" + Integer.toString(autocode + 1);
+            }else if(autocode < 9999){
+                idSpecialist = "SPC00" + Integer.toString(autocode + 1);
+            }else if(autocode < 99999){
+                idSpecialist = "SPC0" + Integer.toString(autocode + 1);
+            }else if(autocode < 99999){
+                idSpecialist = "SPC" + Integer.toString(autocode + 1);
+            }else{
+                idSpecialist = "full";
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+        }
+        return idSpecialist;
+    }
 }
