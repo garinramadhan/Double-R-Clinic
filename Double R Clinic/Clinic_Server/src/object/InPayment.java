@@ -7,7 +7,6 @@ package object;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 
 /**
@@ -27,9 +26,9 @@ public interface InPayment extends Remote{
     public void setPayTotal(double PayTotal) throws RemoteException;;
     public int getIsPay() throws RemoteException;;
     public void setIsPay(int IsPay) throws RemoteException;;
-    public int doInsert() throws RemoteException;;
-    public ResultSet tablePayment() throws RemoteException;;
-    public ArrayList getRecord() throws RemoteException;;
+    public int doUpdate() throws RemoteException;;
+    public ArrayList tablePayment() throws RemoteException;;
+    public ArrayList getRecordDetailPayment(String idPayment) throws RemoteException;;
     public String[] FDPayment() throws RemoteException;;
     public String autoid() throws RemoteException;;
 }

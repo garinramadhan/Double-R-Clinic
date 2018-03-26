@@ -30,4 +30,6 @@ public interface InLogin extends Remote {
     public int doLogin() throws RemoteException;;
     public String[] FDUser() throws RemoteException;;
     public String[] cekAccess() throws RemoteException;;
+    public int cekUsername() throws RemoteException;;
+    public String autoid() throws RemoteException;;
 }

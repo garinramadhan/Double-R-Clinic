@@ -160,15 +160,17 @@ public class MLogin extends UnicastRemoteObject implements InLogin {
          {
              obj_koneksi.openConnection();
              Statement stmt = obj_koneksi.con.createStatement();
-             String str = "select Id_User, Username, isAdmin from AccessLogin";
+             String str = "select * from AccessLogin where isAdmin = 0";
              ResultSet rs = stmt.executeQuery(str);
              while(rs.next())
              {
                  this.setUserID(rs.getString(1));
                  this.setUsername(rs.getString(2));
-                 this.setIsAdmin(rs.getString(3));
+                 this.setPassword(rs.getString(3));
+                 this.setIsAdmin(rs.getString(4));
                  data.add(this.getUserID());
                  data.add(this.getUsername());
+                 data.add(this.getPassword());
                  data.add(this.getIsAdmin());
              }
          }
@@ -260,5 +262,49 @@ public class MLogin extends UnicastRemoteObject implements InLogin {
         {
         }
         return null;
+    }
+    
+    public int cekUsername(){
+        try 
+        {
+            obj_koneksi.openConnection();
+            String sq = "select count (*) 'hasil' from AccessLogin where Username = ?";
+            PreparedStatement ps = obj_koneksi.con.prepareStatement(sq);
+            ps.setString(1, getUsername());
+            
+            ResultSet r = ps.executeQuery();
+            int jumlah = 0;
+            if(r.next())
+            {
+                jumlah = r.getInt("hasil");
+            }
+            return jumlah;          
+        } 
+        catch (Exception e) 
+        {
+        }
+        return 0;
+    }
+    
+    public String autoid(){
+        String idUser = "";
+        try {
+            obj_koneksi.openConnection();
+            String sql1 = "Select Right(Id_User,2) as 'Id_User' from AccessLogin Order by Id_User DESC";
+            Statement stat = obj_koneksi.con.createStatement();
+            ResultSet rs = stat.executeQuery(sql1);
+            rs.next();
+            int autocode = rs.getInt("Id_User");
+            if(autocode < 9){
+                idUser = "SPC0" + Integer.toString(autocode + 1);
+            }else if(autocode < 99){
+                idUser = "SPC" + Integer.toString(autocode + 1);
+            }else{
+                idUser = "full";
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+        }
+        return idUser;
     }
 }

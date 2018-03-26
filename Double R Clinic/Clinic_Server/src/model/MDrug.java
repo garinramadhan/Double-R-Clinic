@@ -94,9 +94,9 @@ public class MDrug extends UnicastRemoteObject implements InDrug {
             PreparedStatement pr = obj_koneksi.con.prepareStatement(str);
             pr.setString(2, DrugName);
             pr.setString(3, DrugType);
-//            pr.setString(4, DrugStock);
+            pr.setInt(4, DrugStock);
             pr.setString(5, DrugEXP);
-//            pr.setString(6, DrugPrice);
+            pr.setDouble(6, DrugPrice);
             i = pr.executeUpdate();
         }
         catch(SQLException ex)
@@ -121,9 +121,9 @@ public class MDrug extends UnicastRemoteObject implements InDrug {
             PreparedStatement pr = obj_koneksi.con.prepareStatement(str);
             pr.setString(1, DrugName);
             pr.setString(2, DrugType);
-//            pr.setString(3, DrugStock);
+            pr.setInt(3, DrugStock);
             pr.setString(4, DrugEXP);
-//            pr.setString(5, DrugPrice);
+            pr.setDouble(5, DrugPrice);
             i = pr.executeUpdate();
         }
         catch(SQLException ex)
@@ -151,16 +151,25 @@ public class MDrug extends UnicastRemoteObject implements InDrug {
         return i;
     }
     
-    public ResultSet tableDrug(){
-        ResultSet rs = null;
+    public ArrayList tableDrug(){
+        ArrayList data = new ArrayList();
         String sql = "select * from Recipe.Drug";
         try {
             Statement statement = obj_koneksi.con.createStatement();
-            rs = statement.executeQuery(sql);
+            ResultSet rs = statement.executeQuery(sql);
+             while(rs.next())
+             {
+                data.add(rs.getString(1));
+                data.add(rs.getString(2));
+                data.add(rs.getString(3));
+                data.add(rs.getInt(4));
+                data.add(rs.getString(5));
+                data.add(rs.getDouble(6));
+             }
         } catch (SQLException ex) {
             System.out.println("Error: " + ex);
         }
-        return rs;
+        return data;
     }
     
     public ArrayList getRecord()
