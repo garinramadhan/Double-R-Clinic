@@ -4,7 +4,6 @@
  */
 package model;
 import config.koneksi;
-import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -67,7 +66,7 @@ public class MSpecialist extends UnicastRemoteObject implements InSpecialist{
             String str = "exec pcdSpecialist ?,?";
             PreparedStatement pr = obj_koneksi.con.prepareStatement(str);
             pr.setString(1, SpcName);
-//            pr.setString(2, SpcFare);
+            pr.setDouble(2, SpcFare);
             i = pr.executeUpdate();
         }
         catch(SQLException ex)
@@ -83,12 +82,13 @@ public class MSpecialist extends UnicastRemoteObject implements InSpecialist{
         try
         {
             obj_koneksi.openConnection();
-            String str = "UPDATE Doctor.Spc SET Specialist =  ?," +
+            String str = "UPDATE Doctor.Specialist SET Specialist =  ?," +
                     "Fare = ? "+
                     "where Id_Specialist = ?";
             PreparedStatement pr = obj_koneksi.con.prepareStatement(str);
             pr.setString(1, SpcName);
-//            pr.setString(2, SpcFare);
+            pr.setDouble(2, SpcFare);
+            pr.setString(3, SpcID);
             i = pr.executeUpdate();
         }
         catch(SQLException ex)
@@ -116,16 +116,25 @@ public class MSpecialist extends UnicastRemoteObject implements InSpecialist{
         return i;
     }
     
-    public ResultSet tableSpecialist(){
-        ResultSet rs = null;
+    public ArrayList tableSpecialist(){
+        ArrayList data = new ArrayList();
         String sql = "select * from Doctor.Specialist";
         try {
             Statement statement = obj_koneksi.con.createStatement();
-            rs = statement.executeQuery(sql);
+            ResultSet rs = statement.executeQuery(sql);
+             while(rs.next())
+             {
+                 this.setSpcID(rs.getString(1));
+                 this.setSpcName(rs.getString(2));
+                 this.setSpcFare(rs.getDouble(3));
+                 data.add(this.getSpcID());
+                 data.add(this.getSpcName());
+                 data.add(this.getSpcFare());
+             }
         } catch (SQLException ex) {
             System.out.println("Error: " + ex);
         }
-        return rs;
+        return data;
     }
     
     public ArrayList getRecord()
@@ -142,7 +151,7 @@ public class MSpecialist extends UnicastRemoteObject implements InSpecialist{
             {
                  this.setSpcID(rs.getString(1));
                  this.setSpcName(rs.getString(2));
-//                 this.setSpcFare(rs.getString(3));
+                 this.setSpcFare(rs.getDouble(3));
                  data.add(this.getSpcID());
                  data.add(this.getSpcName());
                  data.add(this.getSpcFare());
@@ -186,22 +195,16 @@ public class MSpecialist extends UnicastRemoteObject implements InSpecialist{
         String idSpecialist = "";
         try {
             obj_koneksi.openConnection();
-            String sql1 = "Select Right(Id_Specialist,5) as 'Id_Specialist' from Doctor.Specialist Order by Id_Specialist DESC";
+            String sql1 = "Select Right(Id_Specialist,3) as 'Id_Specialist' from Doctor.Specialist Order by Id_Specialist DESC";
             Statement stat = obj_koneksi.con.createStatement();
             ResultSet rs = stat.executeQuery(sql1);
             rs.next();
             int autocode = rs.getInt("Id_Specialist");
             if(autocode < 9){
-                idSpecialist = "SPC0000" + Integer.toString(autocode + 1);
+                idSpecialist = "SPC00" + Integer.toString(autocode + 1);
             }else if(autocode < 99){
-                idSpecialist = "SPC000" + Integer.toString(autocode + 1);
-            }else if(autocode < 999){
-                idSpecialist = "SPC00" + Integer.toString(autocode + 1);
-            }else if(autocode < 9999){
-                idSpecialist = "SPC00" + Integer.toString(autocode + 1);
-            }else if(autocode < 99999){
                 idSpecialist = "SPC0" + Integer.toString(autocode + 1);
-            }else if(autocode < 99999){
+            }else if(autocode < 999){
                 idSpecialist = "SPC" + Integer.toString(autocode + 1);
             }else{
                 idSpecialist = "full";
@@ -210,5 +213,27 @@ public class MSpecialist extends UnicastRemoteObject implements InSpecialist{
             System.out.println("Error: " + e);
         }
         return idSpecialist;
+    }
+    
+    public int specialistAvailable(){
+        int jumlah = 0;
+        try 
+        {
+            obj_koneksi.openConnection();
+            String sq = "select count(Specialist) as Specialist from Doctor.Specialist where Specialist =?";
+            PreparedStatement ps = obj_koneksi.con.prepareStatement(sq);
+            ps.setString(1, getSpcName());
+            
+            ResultSet r = ps.executeQuery();
+            if(r.next())
+            {
+                jumlah = r.getInt("jumlah");
+            }
+            return jumlah;
+        } 
+        catch (Exception e) 
+        {
+        }
+        return jumlah;
     }
 }

@@ -110,18 +110,14 @@ public class MDoctor extends UnicastRemoteObject implements InDoctor{
         try
         {
             obj_koneksi.openConnection();
-            String str = "exec pcduptDoctor @Id_Specialist =  ?," +
-                    "@DoctorName = ? "+
-                    "@DoctorGender = ? "+
-                    "@DateOfBirth = ? "+
-                    "@Phone = ? "+
-                    "where @iddoctor = ?";
+            String str = "exec pcduptDoctor ?,?,?,?,?,?";
             PreparedStatement pr = obj_koneksi.con.prepareStatement(str);
-            pr.setString(1, DoctorSPC);
-            pr.setString(2, DoctorName);
-            pr.setString(3, DoctorGender);
-            pr.setString(4, DoctorDOB);
-            pr.setString(5, DoctorPhone);
+            pr.setString(1, DoctorID);
+            pr.setString(2, DoctorSPC);
+            pr.setString(3, DoctorName);
+            pr.setString(4, DoctorGender);
+            pr.setString(5, DoctorDOB);
+            pr.setString(6, DoctorPhone);
             i = pr.executeUpdate();
         }
         catch(SQLException ex)
@@ -210,16 +206,49 @@ public class MDoctor extends UnicastRemoteObject implements InDoctor{
         return null;
     }
     
-    public ResultSet tableDoctor(){
-        ResultSet rs = null;
+    public ArrayList tableDoctor(){
+        ArrayList data = new ArrayList();
         String sql = "select * from Doctor.Doctor";
         try {
             Statement statement = obj_koneksi.con.createStatement();
-            rs = statement.executeQuery(sql);
+            ResultSet rs = statement.executeQuery(sql);
+             while(rs.next())
+             {
+                 this.setDoctorID(rs.getString(1));
+                 this.setDoctorSPC(rs.getString(2));
+                 this.setDoctorName(rs.getString(3));
+                 this.setDoctorGender(rs.getString(4));
+                 this.setDoctorDOB(rs.getString(5));
+                 this.setDoctorPhone(rs.getString(6));
+                 data.add(this.getDoctorID());
+                 data.add(this.getDoctorSPC());
+                 data.add(this.getDoctorName());
+                 data.add(this.getDoctorGender());
+                 data.add(this.getDoctorDOB());
+                 data.add(this.getDoctorPhone());
+             }
         } catch (SQLException ex) {
             System.out.println("Error: " + ex);
         }
-        return rs;
+        return data;
+    }
+    
+    public ArrayList tableSpecialist(){
+        ArrayList data = new ArrayList();
+        String sql = "select * from Doctor.Specialist";
+        try {
+            Statement statement = obj_koneksi.con.createStatement();
+            ResultSet rs = statement.executeQuery(sql);
+             while(rs.next())
+             {
+                 data.add(rs.getString(1));
+                 data.add(rs.getString(2));
+                 data.add(rs.getDouble(3));
+             }
+        } catch (SQLException ex) {
+            System.out.println("Error: " + ex);
+        }
+        return data;
     }
     
     public String autoid(){

@@ -33,4 +33,6 @@ public interface InTreatment extends Remote{
     public String[] FDTreatment() throws RemoteException;;
     public String autoid() throws RemoteException;;
     public String autoidRecipe() throws RemoteException;;
+    public ArrayList tablePatient() throws RemoteException;;
+    public ArrayList tableDoctor() throws RemoteException;;
 }

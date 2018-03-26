@@ -105,7 +105,7 @@ public class MRecipe extends UnicastRemoteObject implements InRecipe {
             PreparedStatement pr = obj_koneksi.con.prepareStatement(str);
             pr.setString(1, RecipeID);
             pr.setString(2, DrugID);
-//            pr.setString(3, QTY);
+            pr.setInt(3, QTY);
             pr.setString(4, Dose);
             i = pr.executeUpdate();
         }
@@ -134,16 +134,43 @@ public class MRecipe extends UnicastRemoteObject implements InRecipe {
         return i;
     }
     
-    public ResultSet tableRecipe(){
-        ResultSet rs = null;
-        String sql = "select * from Doctor.Doctor";
+    public ArrayList tableRecipe(){
+        ArrayList data = new ArrayList();
+        String sql = "select a.Id_Recipe, b.Patient_Name, c.Diagnose from Patient.Treatment c join Patient.Patient b on c.Id_Patient = b.Id_Patient join Recipe.Recipe a on c.Id_Recipe = a.Id_Recipe join Patient.Payment x on c.Id_Treatment = x.Id_Treatment where x.isPay = 0";
         try {
             Statement statement = obj_koneksi.con.createStatement();
-            rs = statement.executeQuery(sql);
+            ResultSet rs = statement.executeQuery(sql);
+             while(rs.next())
+             {
+                 data.add(rs.getString(1));
+                 data.add(rs.getString(2));
+                 data.add(rs.getString(3));
+             }
         } catch (SQLException ex) {
             System.out.println("Error: " + ex);
         }
-        return rs;
+        return data;
+    }
+    
+    public ArrayList tableDrug(){
+        ArrayList data = new ArrayList();
+        String sql = "select * from Recipe.Drug";
+        try {
+            Statement statement = obj_koneksi.con.createStatement();
+            ResultSet rs = statement.executeQuery(sql);
+             while(rs.next())
+             {
+                 data.add(rs.getString(1));
+                 data.add(rs.getString(2));
+                 data.add(rs.getString(3));
+                 data.add(rs.getInt(4));
+                 data.add(rs.getString(5));
+                 data.add(rs.getDouble(6));
+             }
+        } catch (SQLException ex) {
+            System.out.println("Error: " + ex);
+        }
+        return data;
     }
     
     public ArrayList getRecord()
@@ -213,7 +240,7 @@ public class MRecipe extends UnicastRemoteObject implements InRecipe {
         String idRecipe = "";
         try {
             obj_koneksi.openConnection();
-            String sql1 = "select top 1 Id_RecipeDetail from Recipe.RecipeDetail order by Id_RecipeDetail desc";
+            String sql1 = "select right (Id_RecipeDetail,5) as 'Id_RecipeDetail' from Recipe.RecipeDetail order by Id_RecipeDetail desc";
             Statement stat = obj_koneksi.con.createStatement();
             ResultSet rs = stat.executeQuery(sql1);
             rs.next();

@@ -5,7 +5,6 @@
 package model;
 import config.koneksi;
 import java.rmi.server.UnicastRemoteObject;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -102,16 +101,13 @@ public class MPatient extends UnicastRemoteObject implements InPatient{
         try
         {
             obj_koneksi.openConnection();
-            String str = "exec pcduptPatient @name =  ?," +
-                    "@dob = ? "+
-                    "@address = ? "+
-                    "@gender = ? "+
-                    "where @idpatient = ?";
+            String str = "exec pcduptPatient ?, ?, ?, ?, ?";
             PreparedStatement pr = obj_koneksi.con.prepareStatement(str);
-            pr.setString(1, PatientName);
-            pr.setString(2, PatientDOB);
-            pr.setString(3, PatientAddress);
-            pr.setString(4, PatientGender);
+            pr.setString(1, PatientID);
+            pr.setString(2, PatientName);
+            pr.setString(3, PatientDOB);
+            pr.setString(4, PatientAddress);
+            pr.setString(5, PatientGender);
             i = pr.executeUpdate();
         }
         catch(SQLException ex)
@@ -139,16 +135,29 @@ public class MPatient extends UnicastRemoteObject implements InPatient{
         return i;
     }
     
-    public ResultSet tablePatient(){
-        ResultSet rs = null;
+    public ArrayList tablePatient(){
+        ArrayList data = new ArrayList();
         String sql = "select * from Patient.Patient";
         try {
             Statement statement = obj_koneksi.con.createStatement();
-            rs = statement.executeQuery(sql);
+            ResultSet rs = statement.executeQuery(sql);
+             while(rs.next())
+             {
+                 this.setPatientID(rs.getString(1));
+                 this.setPatientName(rs.getString(2));
+                 this.setPatientDOB(rs.getString(3));
+                 this.setPatientAddress(rs.getString(4));
+                 this.setPatientGender(rs.getString(5));
+                 data.add(this.getPatientID());
+                 data.add(this.getPatientName());
+                 data.add(this.getPatientDOB());
+                 data.add(this.getPatientAddress());
+                 data.add(this.getPatientGender());
+             }
         } catch (SQLException ex) {
             System.out.println("Error: " + ex);
         }
-        return rs;
+        return data;
     }
     
     public ArrayList getRecord()

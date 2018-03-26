@@ -32,7 +32,9 @@ public interface InRecipe extends Remote{
     public int doInsert() throws RemoteException;;
 //    public int doUpdate() throws RemoteException;;
     public int doDelete() throws RemoteException;;
-    public ResultSet tableRecipe() throws RemoteException;;
+    public ArrayList tableRecipe() throws RemoteException;;
+    public ArrayList tableDrug() throws RemoteException;;
     public ArrayList getRecord() throws RemoteException;;
     public String[] FDRecipe() throws RemoteException;;
+    public String autoid() throws RemoteException;;
 }

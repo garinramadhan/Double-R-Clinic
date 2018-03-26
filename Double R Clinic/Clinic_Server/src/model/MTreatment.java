@@ -121,7 +121,7 @@ public class MTreatment extends UnicastRemoteObject implements InTreatment {
         String idTreatment = "";
         try {
             obj_koneksi.openConnection();
-            String sql1 = "select top 1 Id_Treatment from Patient.Treatment order by Id_Treatment desc";
+            String sql1 = "select right (Id_Treatment,5) as 'Id_Treatment' from Patient.Treatment order by Id_Treatment desc";
             Statement stat = obj_koneksi.con.createStatement();
             ResultSet rs = stat.executeQuery(sql1);
             rs.next();
@@ -151,11 +151,11 @@ public class MTreatment extends UnicastRemoteObject implements InTreatment {
         String idRecipe = "";
         try {
             obj_koneksi.openConnection();
-            String sql1 = "select top 1 Id_Recipe from Recipe.Recipe order by Id_Recipe desc";
+            String sql1 = "select right (Id_Recipe,5) as 'Id_Recipe' from Recipe.Recipe order by Id_Recipe desc";
             Statement stat = obj_koneksi.con.createStatement();
             ResultSet rs = stat.executeQuery(sql1);
             rs.next();
-            int autocode = rs.getInt("Id_Treatment");
+            int autocode = rs.getInt("Id_Recipe");
             if(autocode < 9){
                 idRecipe = "R0000" + Integer.toString(autocode + 1);
             }else if(autocode < 99){
@@ -204,6 +204,45 @@ public class MTreatment extends UnicastRemoteObject implements InTreatment {
         catch(SQLException ex)
         {
             System.out.println(ex.getMessage());
+        }
+        return data;
+    }
+    
+    public ArrayList tablePatient(){
+        ArrayList data = new ArrayList();
+        String sql = "select * from Patient.Patient";
+        try {
+            Statement statement = obj_koneksi.con.createStatement();
+            ResultSet rs = statement.executeQuery(sql);
+             while(rs.next())
+             {
+                 data.add(rs.getString(1));
+                 data.add(rs.getString(2));
+                 data.add(rs.getString(3));
+                 data.add(rs.getString(4));
+                 data.add(rs.getString(5));
+             }
+        } catch (SQLException ex) {
+            System.out.println("Error: " + ex);
+        }
+        return data;
+    }
+    
+    public ArrayList tableDoctor(){
+        ArrayList data = new ArrayList();
+        String sql = "select a.Id_Doctor, a.DoctorName, b.Id_Specialist, a.DoctorGender from Doctor.Doctor a join Doctor.Specialist b on a.Id_Specialist = b.Id_Specialist";
+        try {
+            Statement statement = obj_koneksi.con.createStatement();
+            ResultSet rs = statement.executeQuery(sql);
+             while(rs.next())
+             {
+                 data.add(rs.getString(1));
+                 data.add(rs.getString(2));
+                 data.add(rs.getString(3));
+                 data.add(rs.getString(4));
+             }
+        } catch (SQLException ex) {
+            System.out.println("Error: " + ex);
         }
         return data;
     }
