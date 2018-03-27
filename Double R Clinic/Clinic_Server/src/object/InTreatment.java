@@ -7,7 +7,6 @@ package object;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 
 /**
@@ -28,8 +27,7 @@ public interface InTreatment extends Remote{
     public String getTreatDate() throws RemoteException;;
     public void setTreatDate(String TreatDate) throws RemoteException;;
     public int doInsert() throws RemoteException;;
-    public ResultSet tableTreatment() throws RemoteException;;
-    public ArrayList getRecord() throws RemoteException;;
+    public ArrayList getRecordDoctor(String search) throws RemoteException;;
     public String[] FDTreatment() throws RemoteException;;
     public String autoid() throws RemoteException;;
     public String autoidRecipe() throws RemoteException;;

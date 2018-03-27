@@ -26,7 +26,8 @@ public interface InDoctor extends Remote{
     public int doInsert() throws RemoteException;;
     public int doUpdate() throws RemoteException;;
     public int doDelete() throws RemoteException;;
-    public ArrayList getRecord() throws RemoteException;;
+    public ArrayList getRecord(String search) throws RemoteException;;
+    public ArrayList getRecordSpecialist(String search) throws RemoteException;;
     public String[] FDDoctor() throws RemoteException;;
     public String autoid() throws RemoteException;;
     public ArrayList tableDoctor() throws RemoteException;;

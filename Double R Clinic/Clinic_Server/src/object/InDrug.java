@@ -31,7 +31,7 @@ public interface InDrug extends Remote {
     public int doUpdate() throws RemoteException;;
     public int doDelete() throws RemoteException;;
     public ArrayList tableDrug() throws RemoteException;;
-    public ArrayList getRecord() throws RemoteException;;
+    public ArrayList getRecord(String search) throws RemoteException;;
     public String[] FDDrug() throws RemoteException;;
     public String autoid() throws RemoteException;;
 }

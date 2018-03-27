@@ -103,20 +103,6 @@ public class MTreatment extends UnicastRemoteObject implements InTreatment {
         return i;
     }
     
-    public ResultSet tableTreatment(){
-        ResultSet rs = null;
-        String sql = "select a.Id_Treatment as Id_Treatment, b.Patient_Name as Patient_Name, c.DoctorName"
-                + "as DoctorName, a.Id_Recipe as Id_Recipe, a.Diagnose as Diagnose, a.DateTreatment as DateTreatment"
-                + "from Patient.Treatment a join Patient.Patient b on a.Id_Patient = b.Id_Patient join Doctor.Doctor c on a.Id_Doctor = c.Id_Doctor";
-        try {
-            Statement statement = obj_koneksi.con.createStatement();
-            rs = statement.executeQuery(sql);
-        } catch (SQLException ex) {
-            System.out.println("Error: " + ex);
-        }
-        return rs;
-    }
-    
     public String autoid(){
         String idTreatment = "";
         try {
@@ -177,28 +163,25 @@ public class MTreatment extends UnicastRemoteObject implements InTreatment {
         return idRecipe;
     }
     
-    public ArrayList getRecord()
+    public ArrayList getRecordDoctor(String search)
     {
         ArrayList data = new ArrayList();
         try
         {
             obj_koneksi.openConnection();
-            String str = "select * from Patient.Treatment where Id_Treatment = ?";
+            String str = "select a.Id_Doctor, a.DoctorName, b.Id_Specialist, a.DoctorGender from Doctor.Doctor a join Doctor.Specialist b on a.Id_Specialist = b.Id_Specialist where a.Id_Doctor like ? or a.DoctorName like ? or b.Id_Specialist like ? or a.DoctorGender like ?";
             PreparedStatement pr = obj_koneksi.con.prepareStatement(str);
-            pr.setString(1, DoctorID);
+            pr.setString(1, "%"+search+"%");
+            pr.setString(2, "%"+search+"%");
+            pr.setString(3, "%"+search+"%");
+            pr.setString(4, "%"+search+"%");
             ResultSet rs = pr.executeQuery();
             while(rs.next())
             {
-                 this.setPatientID(rs.getString(1));
-                 this.setDoctorID(rs.getString(2));
-                 this.setRecipeID(rs.getString(3));
-                 this.setDiagnose(rs.getString(4));
-                 this.setTreatDate(rs.getString(5));
-                 data.add(this.getPatientID());
-                 data.add(this.getDoctorID());
-                 data.add(this.getRecipeID());
-                 data.add(this.getDiagnose());
-                 data.add(this.getTreatDate());
+                 data.add(rs.getString(1));
+                 data.add(rs.getString(2));
+                 data.add(rs.getString(3));
+                 data.add(rs.getString(4));
             }
         }
         catch(SQLException ex)

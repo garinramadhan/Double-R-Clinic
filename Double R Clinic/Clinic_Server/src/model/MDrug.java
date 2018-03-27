@@ -172,24 +172,30 @@ public class MDrug extends UnicastRemoteObject implements InDrug {
         return data;
     }
     
-    public ArrayList getRecord()
+    public ArrayList getRecord(String search)
     {
         ArrayList data = new ArrayList();
         try
         {
             obj_koneksi.openConnection();
-            String str = "select * from Recipe.Drug where Id_Drug = ?";
+            String str = " select * from Recipe.Drug where Id_Drug like ? or DrugName like ? or DrugType like ? or Stock like ? or ExpDate like ? or Price like ?";
             PreparedStatement pr = obj_koneksi.con.prepareStatement(str);
-            pr.setString(1, DrugID);
+            pr.setString(1, "%"+search+"%");
+            pr.setString(2, "%"+search+"%");
+            pr.setString(3, "%"+search+"%");
+            pr.setString(4, "%"+search+"%");
+            pr.setString(5, "%"+search+"%");
+            pr.setString(6, "%"+search+"%");
+            //pr.setDouble(3, Double.parseDouble("%"+SpcFare+"%"));
             ResultSet rs = pr.executeQuery();
             while(rs.next())
             {
                  this.setDrugID(rs.getString(1));
                  this.setDrugName(rs.getString(2));
                  this.setDrugType(rs.getString(3));
-//                 this.setDrugStock(rs.getString(4));
+                 this.setDrugStock(rs.getInt(4));
                  this.setDrugEXP(rs.getString(5));
-//                 this.setDrugPrice(rs.getString(6));
+                 this.setDrugPrice(rs.getDouble(6));
                  data.add(this.getDrugID());
                  data.add(this.getDrugName());
                  data.add(this.getDrugType());

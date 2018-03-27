@@ -160,15 +160,19 @@ public class MPatient extends UnicastRemoteObject implements InPatient{
         return data;
     }
     
-    public ArrayList getRecord()
+    public ArrayList getRecord(String search)
     {
         ArrayList data = new ArrayList();
         try
         {
             obj_koneksi.openConnection();
-            String str = "select * from Patient.Patient where Id_Patient = ?";
+            String str = "select * from Patient.Patient where Id_Patient like ? or Patient_Name like ? or DateOfBirth like ? or Address like ? or GenderPatient like ?";
             PreparedStatement pr = obj_koneksi.con.prepareStatement(str);
-            pr.setString(1, PatientID);
+            pr.setString(1, "%"+search+"%");
+            pr.setString(2, "%"+search+"%");
+            pr.setString(3, "%"+search+"%");
+            pr.setString(4, "%"+search+"%");
+            pr.setString(5, "%"+search+"%");
             ResultSet rs = pr.executeQuery();
             while(rs.next())
             {
@@ -248,5 +252,5 @@ public class MPatient extends UnicastRemoteObject implements InPatient{
         }
         return idPatient;
     }
-    
+        
 }

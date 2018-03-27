@@ -145,15 +145,20 @@ public class MDoctor extends UnicastRemoteObject implements InDoctor{
         return i;
     }
     
-    public ArrayList getRecord()
+    public ArrayList getRecord(String search)
     {
         ArrayList data = new ArrayList();
         try
         {
             obj_koneksi.openConnection();
-            String str = "select * from Doctor.Doctor where Id_Doctor = ?";
+            String str = "select * from Doctor.Doctor where Id_Doctor like ? or Id_Specialist like ? or DoctorName like ? or DoctorGender like ? or DateOfBirth like ? or Phone like ?";
             PreparedStatement pr = obj_koneksi.con.prepareStatement(str);
-            pr.setString(1, DoctorID);
+            pr.setString(1, "%"+search+"%");
+            pr.setString(2, "%"+search+"%");
+            pr.setString(3, "%"+search+"%");
+            pr.setString(4, "%"+search+"%");
+            pr.setString(5, "%"+search+"%");
+            pr.setString(6, "%"+search+"%");
             ResultSet rs = pr.executeQuery();
             while(rs.next())
             {
@@ -169,6 +174,33 @@ public class MDoctor extends UnicastRemoteObject implements InDoctor{
                  data.add(this.getDoctorGender());
                  data.add(this.getDoctorDOB());
                  data.add(this.getDoctorPhone());
+            }
+        }
+        catch(SQLException ex)
+        {
+            System.out.println(ex.getMessage());
+        }
+        return data;
+    }
+    
+    public ArrayList getRecordSpecialist(String search)
+    {
+            ArrayList data = new ArrayList();
+        try
+        {
+            obj_koneksi.openConnection();
+            String str = "select * from Doctor.Specialist where Id_Specialist like ? or Specialist like ?  or Fare like ?";
+            PreparedStatement pr = obj_koneksi.con.prepareStatement(str);
+            pr.setString(1, "%"+search+"%");
+            pr.setString(2, "%"+search+"%");
+            pr.setString(3, "%"+search+"%");
+            //pr.setDouble(3, Double.parseDouble("%"+SpcFare+"%"));
+            ResultSet rs = pr.executeQuery();
+            while(rs.next())
+            {
+                 data.add(rs.getString(1));
+                 data.add(rs.getString(2));
+                 data.add(rs.getDouble(3));
             }
         }
         catch(SQLException ex)
