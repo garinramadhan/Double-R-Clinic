@@ -21,7 +21,7 @@ public interface InSpecialist extends Remote{
     public int doUpdate() throws RemoteException;;
     public int doDelete() throws RemoteException;;
     public ArrayList tableSpecialist() throws RemoteException;;
-    public ArrayList getRecord() throws RemoteException;;
+    public ArrayList getRecord(String search) throws RemoteException;;
     public String[] FDSpc() throws RemoteException;;
     public String autoid() throws RemoteException;;
     public int specialistAvailable() throws RemoteException;;
