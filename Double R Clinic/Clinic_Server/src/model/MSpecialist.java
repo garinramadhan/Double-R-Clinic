@@ -143,9 +143,11 @@ public class MSpecialist extends UnicastRemoteObject implements InSpecialist{
         try
         {
             obj_koneksi.openConnection();
-            String str = "select * from Doctor.Specialist where Id_Specialist = ?";
+            String str = "select * from Doctor.Specialist where Id_Specialist like ? or Specialist like ?";
             PreparedStatement pr = obj_koneksi.con.prepareStatement(str);
-            pr.setString(1, SpcID);
+            pr.setString(1, "%"+SpcID+"%");
+            pr.setString(2, "%"+SpcName+"%");
+            //pr.setDouble(3, Double.parseDouble("%"+SpcFare+"%"));
             ResultSet rs = pr.executeQuery();
             while(rs.next())
             {
