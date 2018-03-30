@@ -34,7 +34,7 @@ public interface InRecipe extends Remote{
     public int doDelete() throws RemoteException;;
     public ArrayList tableRecipe() throws RemoteException;;
     public ArrayList tableDrug() throws RemoteException;;
-    public ArrayList getRecord() throws RemoteException;;
+    public ArrayList getRecord(String search) throws RemoteException;;
     public String[] FDRecipe() throws RemoteException;;
     public String autoid() throws RemoteException;;
 }

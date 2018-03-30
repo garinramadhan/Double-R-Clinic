@@ -26,7 +26,7 @@ public interface InLogin extends Remote {
     public int doUpdate() throws RemoteException;;
     public int doDelete() throws RemoteException;;
     public ArrayList display() throws RemoteException;;
-    public ArrayList getRecord() throws RemoteException;;
+    public ArrayList getRecord(String search) throws RemoteException;;
     public int doLogin() throws RemoteException;;
     public String[] FDUser() throws RemoteException;;
     public String[] cekAccess() throws RemoteException;;

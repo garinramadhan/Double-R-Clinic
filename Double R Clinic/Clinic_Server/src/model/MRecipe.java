@@ -173,32 +173,23 @@ public class MRecipe extends UnicastRemoteObject implements InRecipe {
         return data;
     }
     
-    public ArrayList getRecord()
+    public ArrayList getRecord(String search)
     {
         ArrayList data = new ArrayList();
         try
         {
             obj_koneksi.openConnection();
-            String str = "select * from Recipe.Drug where Id_Drug = ?";
-            PreparedStatement pr = obj_koneksi.con.prepareStatement(str);
-            pr.setString(1, RecipeDetID);
+            String sql = "select a.Id_Recipe, b.Patient_Name, c.Diagnose from Patient.Treatment c join Patient.Patient b on c.Id_Patient = b.Id_Patient join Recipe.Recipe a on c.Id_Recipe = a.Id_Recipe join Patient.Payment x on c.Id_Treatment = x.Id_Treatment where x.isPay = 0 and (a.Id_Recipe like ? or b.Patient_Name like ? or c.Diagnose like ?)";
+            PreparedStatement pr = obj_koneksi.con.prepareStatement(sql);
+            pr.setString(1, "%"+search+"%");
+            pr.setString(2, "%"+search+"%");
+            pr.setString(3, "%"+search+"%");
             ResultSet rs = pr.executeQuery();
             while(rs.next())
             {
-                 this.setRecipeDetID(rs.getString(1));
-                 this.setRecipeID(rs.getString(2));
-                 this.setDrugID(rs.getString(3));
-//                 this.setQTY(rs.getString(4));
-                 this.setDose(rs.getString(5));
-//                 this.setSubTotal(rs.getString(6));
-//                 this.setIsDraft(rs.getString(7));
-                 data.add(this.getRecipeDetID());
-                 data.add(this.getRecipeID());
-                 data.add(this.getDrugID());
-                 data.add(this.getQTY());
-                 data.add(this.getDose());
-                 data.add(this.getSubTotal());
-                 data.add(this.getIsDraft());
+                 data.add(rs.getString(1));
+                 data.add(rs.getString(2));
+                 data.add(rs.getString(3));
             }
         }
         catch(SQLException ex)
@@ -207,6 +198,8 @@ public class MRecipe extends UnicastRemoteObject implements InRecipe {
         }
         return data;
     }
+    
+    
     
     public String[] FDRecipe()
     {

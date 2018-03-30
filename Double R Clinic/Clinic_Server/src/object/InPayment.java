@@ -28,7 +28,10 @@ public interface InPayment extends Remote{
     public void setIsPay(int IsPay) throws RemoteException;;
     public int doUpdate() throws RemoteException;;
     public ArrayList tablePayment() throws RemoteException;;
-    public ArrayList getRecordDetailPayment(String idPayment) throws RemoteException;;
+    public ArrayList getRecordDetailPayment(String search) throws RemoteException;;
     public String[] FDPayment() throws RemoteException;;
     public String autoid() throws RemoteException;;
+    
+    public ArrayList tablePaymentHistory() throws RemoteException;;
+    public ArrayList getRecordDetailPaymentHistory(String search) throws RemoteException;;
 }

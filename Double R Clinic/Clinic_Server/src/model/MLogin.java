@@ -124,15 +124,16 @@ public class MLogin extends UnicastRemoteObject implements InLogin {
         return i;
     }
     
-    public ArrayList getRecord()
+    public ArrayList getRecord(String search)
     {
         ArrayList data = new ArrayList();
         try
         {
             obj_koneksi.openConnection();
-            String str = "select * from AccessLogin where Id_User = ?";
+            String str = "select * from AccessLogin where Id_User like ? or Username like ?";
             PreparedStatement pr = obj_koneksi.con.prepareStatement(str);
-            pr.setString(1, UserID);
+            pr.setString(1, "%"+search+"%");
+            pr.setString(2, "%"+search+"%");
             ResultSet rs = pr.executeQuery();
             while(rs.next())
             {
@@ -296,9 +297,9 @@ public class MLogin extends UnicastRemoteObject implements InLogin {
             rs.next();
             int autocode = rs.getInt("Id_User");
             if(autocode < 9){
-                idUser = "SPC0" + Integer.toString(autocode + 1);
+                idUser = "USR0" + Integer.toString(autocode + 1);
             }else if(autocode < 99){
-                idUser = "SPC" + Integer.toString(autocode + 1);
+                idUser = "USR" + Integer.toString(autocode + 1);
             }else{
                 idUser = "full";
             }

@@ -6,7 +6,6 @@
 package model;
 
 import config.koneksi;
-import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -119,24 +118,38 @@ public class MPayment extends UnicastRemoteObject implements InPayment{
     }
 
     @Override
-    public ArrayList getRecordDetailPayment(String idPayment){
+    public ArrayList getRecordDetailPayment(String search){
         ArrayList data = new ArrayList();
-        String sql = "select x.Id_Payment, b.Patient_Name, c.DoctorName, f.DrugName, f.Price, e.Qty, e.Subtotal from Patient.Treatment a join Patient.Payment x on a.Id_Treatment = x.Id_Treatment join Patient.Patient b on a.Id_Patient = b.Id_Patient join Doctor.Doctor c on a.Id_Doctor = c.Id_Doctor join Recipe.Recipe d on a.Id_Recipe = d.Id_Recipe join Recipe.RecipeDetail e on e.Id_Recipe = d.Id_Recipe join Recipe.Drug f on e.Id_Drug = f.Id_Drug where x.Id_Payment like '" + idPayment + "'";
-        try {
-            Statement statement = obj_koneksi.con.createStatement();
-            ResultSet rs = statement.executeQuery(sql);
-             while(rs.next())
-             {
+        try
+        {
+            obj_koneksi.openConnection();
+            String str = "select c.Id_Payment,a.Patient_Name, x.DoctorName ,b.Diagnose,b.DateTreatment,c.PaymentDoctor,c.PaymentDrug,c.TotalPayment from Patient.Patient a join Patient.Treatment b on a.Id_Patient = b.Id_Patient join Patient.Payment c on c.Id_Treatment = b.Id_Treatment join Doctor.Doctor x on b.Id_Doctor = x.Id_Doctor where c.isPay like '0' and (c.Id_Payment like ? or a.Patient_Name like ? or x.DoctorName like ? or b.Diagnose like ? or b.DateTreatment like ? or c.PaymentDoctor like ? or c.PaymentDrug like ? or c.TotalPayment like ?)";
+            PreparedStatement pr = obj_koneksi.con.prepareStatement(str);
+            pr.setString(1, "%"+search+"%");
+            pr.setString(2, "%"+search+"%");
+            pr.setString(3, "%"+search+"%");
+            pr.setString(4, "%"+search+"%");
+            pr.setString(5, "%"+search+"%");
+            pr.setString(6, "%"+search+"%");
+            pr.setString(7, "%"+search+"%");
+            pr.setString(8, "%"+search+"%");
+            //pr.setDouble(3, Double.parseDouble("%"+SpcFare+"%"));
+            ResultSet rs = pr.executeQuery();
+            while(rs.next())
+            {
                  data.add(rs.getString(1));
                  data.add(rs.getString(2));
                  data.add(rs.getString(3));
                  data.add(rs.getString(4));
-                 data.add(rs.getDouble(5));
-                 data.add(rs.getInt(6));
+                 data.add(rs.getString(5));
+                 data.add(rs.getDouble(6));
                  data.add(rs.getDouble(7));
-             }
-        } catch (SQLException ex) {
-            System.out.println("Error: " + ex);
+                 data.add(rs.getDouble(8));
+            }
+        }
+        catch(SQLException ex)
+        {
+            System.out.println(ex.getMessage());
         }
         return data;
     }
@@ -177,4 +190,60 @@ public class MPayment extends UnicastRemoteObject implements InPayment{
         return idPayment;
     }
     
+    public ArrayList tablePaymentHistory(){
+        ArrayList data = new ArrayList();
+        String sql = "select x.Id_Payment, b.Patient_Name, a.Diagnose, x.PaymentDoctor, x.PaymentDrug, x.TotalPayment from Patient.Treatment a join Patient.Patient b on a.Id_Patient = b.Id_Patient join Patient.Payment x on a.Id_Treatment = x.Id_Treatment where x.isPay = '1'";
+        try {
+            Statement statement = obj_koneksi.con.createStatement();
+            ResultSet rs = statement.executeQuery(sql);
+             while(rs.next())
+             {
+                 data.add(rs.getString(1));
+                 data.add(rs.getString(2));
+                 data.add(rs.getString(3));
+                 data.add(rs.getDouble(4));
+                 data.add(rs.getDouble(5));
+                 data.add(rs.getDouble(6));
+             }
+        } catch (SQLException ex) {
+            System.out.println("Error: " + ex);
+        }
+        return data;
+    }
+    
+    public ArrayList getRecordDetailPaymentHistory(String search){
+        ArrayList data = new ArrayList();
+        try
+        {
+            obj_koneksi.openConnection();
+            String str = "select c.Id_Payment,a.Patient_Name, x.DoctorName ,b.Diagnose,b.DateTreatment,c.PaymentDoctor,c.PaymentDrug,c.TotalPayment from Patient.Patient a join Patient.Treatment b on a.Id_Patient = b.Id_Patient join Patient.Payment c on c.Id_Treatment = b.Id_Treatment join Doctor.Doctor x on b.Id_Doctor = x.Id_Doctor where c.isPay like '1' and (c.Id_Payment like ? or a.Patient_Name like ? or x.DoctorName like ? or b.Diagnose like ? or b.DateTreatment like ? or c.PaymentDoctor like ? or c.PaymentDrug like ? or c.TotalPayment like ?)";
+            PreparedStatement pr = obj_koneksi.con.prepareStatement(str);
+            pr.setString(1, "%"+search+"%");
+            pr.setString(2, "%"+search+"%");
+            pr.setString(3, "%"+search+"%");
+            pr.setString(4, "%"+search+"%");
+            pr.setString(5, "%"+search+"%");
+            pr.setString(6, "%"+search+"%");
+            pr.setString(7, "%"+search+"%");
+            pr.setString(8, "%"+search+"%");
+            //pr.setDouble(3, Double.parseDouble("%"+SpcFare+"%"));
+            ResultSet rs = pr.executeQuery();
+            while(rs.next())
+            {
+                 data.add(rs.getString(1));
+                 data.add(rs.getString(2));
+                 data.add(rs.getString(3));
+                 data.add(rs.getString(4));
+                 data.add(rs.getString(5));
+                 data.add(rs.getDouble(6));
+                 data.add(rs.getDouble(7));
+                 data.add(rs.getDouble(8));
+            }
+        }
+        catch(SQLException ex)
+        {
+            System.out.println(ex.getMessage());
+        }
+        return data;
+    }
 }
